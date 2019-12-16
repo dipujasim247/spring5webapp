@@ -2,6 +2,7 @@ package com.stornit.spring5webapp.model;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 // == JPA API Entity (javax.persistence)==
@@ -16,7 +17,9 @@ public class Author {
     private String LAST_NAME;
 
     // == object relational mapping ==
+
     // == set many to many relationship
+
     @ManyToMany(mappedBy = "authors")
     Set<Book> books = new HashSet<>();
 
@@ -72,11 +75,17 @@ public class Author {
 
     // == Object equality method ==
 
+    @Override
     public boolean equals(Object o){
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Author author = (Author) o;
         return id == author.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     // == To String object ==

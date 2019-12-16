@@ -9,38 +9,34 @@ import java.util.Set;
 @Entity
 public class Book {
 
-    // == Fields ==
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String TITLE;
-    private String ISBN;
-    private String PUBLISHER;
+    private String title;
+    private String isbn;
 
-    // == Object Relational Mapping ==
-    // == Many to Many realtionship
+    @ManyToOne(targetEntity = Publisher.class   )
+    private Publisher publisher;
+
     @ManyToMany
-    @JoinTable(name = "author_books", joinColumns = @JoinColumn(name = "book_id"),
-    inverseJoinColumns = @JoinColumn(name = "author_id"))
-    Set<Author> authors = new HashSet<>();
-
-    // == Constructors ==
-
-    public Book(String TITLE, String ISBN, String PUBLISHER) {
-        this.TITLE = TITLE;
-        this.ISBN = ISBN;
-        this.PUBLISHER = PUBLISHER;
-    }
-
-    public Book(String TITLE, String ISBN, String PUBLISHER, Set<Author> authors) {
-        this.TITLE = TITLE;
-        this.ISBN = ISBN;
-        this.PUBLISHER = PUBLISHER;
-        this.authors = authors;
-    }
+    @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id"))
+    private Set<Author> authors = new HashSet<>();
 
     public Book() {
+    }
+
+    public Book(String title, String isbn, Publisher publisher) {
+        this.title = title;
+        this.isbn = isbn;
+        this.publisher = publisher;
+    }
+
+    public Book(String title, String isbn, Publisher publisher, Set<Author> authors) {
+        this.title = title;
+        this.isbn = isbn;
+        this.publisher = publisher;
+        this.authors = authors;
     }
 
     public Long getId() {
@@ -51,28 +47,28 @@ public class Book {
         this.id = id;
     }
 
-    public String getTITLE() {
-        return TITLE;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTITLE(String TITLE) {
-        this.TITLE = TITLE;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getISBN() {
-        return ISBN;
+    public String getIsbn() {
+        return isbn;
     }
 
-    public void setISBN(String ISBN) {
-        this.ISBN = ISBN;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
-    public String getPUBLISHER() {
-        return PUBLISHER;
+    public Publisher getPublisher() {
+        return publisher;
     }
 
-    public void setPUBLISHER(String PUBLISHER) {
-        this.PUBLISHER = PUBLISHER;
+    public void setPublisher(Publisher publisher) {
+        this.publisher = publisher;
     }
 
     public Set<Author> getAuthors() {
@@ -87,22 +83,24 @@ public class Book {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Book book = (Book) o;
-        return id == book.id;
+
+        return id != null ? id.equals(book.id) : book.id == null;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return id != null ? id.hashCode() : 0;
     }
 
     @Override
     public String toString() {
         return "Book{" +
                 "id=" + id +
-                ", TITLE='" + TITLE + '\'' +
-                ", ISBN='" + ISBN + '\'' +
-                ", PUBLISHER='" + PUBLISHER + '\'' +
+                ", title='" + title + '\'' +
+                ", isbn='" + isbn + '\'' +
+                ", publisher='" + publisher + '\'' +
                 ", authors=" + authors +
                 '}';
     }
